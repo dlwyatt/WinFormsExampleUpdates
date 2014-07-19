@@ -1,42 +1,41 @@
 # Original example posted at http://technet.microsoft.com/en-us/library/ff730942.aspx
 
-[void] [System.Reflection.Assembly]::LoadWithPartialName("System.Windows.Forms")
-[void] [System.Reflection.Assembly]::LoadWithPartialName("System.Drawing") 
+Add-Type -AssemblyName System.Windows.Forms
+Add-Type -AssemblyName System.Drawing
 
-$objForm = New-Object Windows.Forms.Form 
+$form = New-Object Windows.Forms.Form 
 
-$objForm.Text = "Select a Date" 
-$objForm.Size = New-Object Drawing.Size @(190,190) 
-$objForm.StartPosition = "CenterScreen"
+$form.Text = "Select a Date" 
+$form.Size = New-Object Drawing.Size @(243,230) 
+$form.StartPosition = "CenterScreen"
 
-$objForm.KeyPreview = $True
+$calendar = New-Object System.Windows.Forms.MonthCalendar 
+$calendar.ShowTodayCircle = $False
+$calendar.MaxSelectionCount = 1
+$form.Controls.Add($calendar) 
 
-$objForm.Add_KeyDown({
-    if ($_.KeyCode -eq "Enter") 
-        {
-            $dtmDate=$objCalendar.SelectionStart
-            $objForm.Close()
-        }
-    })
+$OKButton = New-Object System.Windows.Forms.Button
+$OKButton.Location = New-Object System.Drawing.Size(38,165)
+$OKButton.Size = New-Object System.Drawing.Size(75,23)
+$OKButton.Text = "OK"
+$OKButton.DialogResult = [System.Windows.Forms.DialogResult]::OK
+$form.AcceptButton = $OKButton
+$form.Controls.Add($OKButton)
 
-$objForm.Add_KeyDown({
-    if ($_.KeyCode -eq "Escape") 
-        {
-            $objForm.Close()
-        }
-    })
+$CancelButton = New-Object System.Windows.Forms.Button
+$CancelButton.Location = New-Object System.Drawing.Size(113,165)
+$CancelButton.Size = New-Object System.Drawing.Size(75,23)
+$CancelButton.Text = "Cancel"
+$CancelButton.DialogResult = [System.Windows.Forms.DialogResult]::Cancel
+$form.CancelButton = $CancelButton
+$form.Controls.Add($CancelButton)
 
-$objCalendar = New-Object System.Windows.Forms.MonthCalendar 
-$objCalendar.ShowTodayCircle = $False
-$objCalendar.MaxSelectionCount = 1
-$objForm.Controls.Add($objCalendar) 
+$form.Topmost = $True
 
-$objForm.Topmost = $True
+$result = $form.ShowDialog() 
 
-$objForm.Add_Shown({$objForm.Activate()})  
-[void] $objForm.ShowDialog() 
-
-if ($dtmDate)
-    {
-        Write-Host "Date selected: $dtmDate"
-    }
+if ($result -eq [System.Windows.Forms.DialogResult]::OK)
+{
+    $date = $calendar.SelectionStart
+    Write-Host "Date selected: $($date.ToShortDateString())"
+}

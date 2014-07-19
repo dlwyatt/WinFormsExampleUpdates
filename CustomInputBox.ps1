@@ -1,47 +1,47 @@
 # Original example posted at http://technet.microsoft.com/en-us/library/ff730941.aspx
 
-[void] [System.Reflection.Assembly]::LoadWithPartialName("System.Drawing") 
-[void] [System.Reflection.Assembly]::LoadWithPartialName("System.Windows.Forms") 
+Add-Type -AssemblyName System.Windows.Forms
+Add-Type -AssemblyName System.Drawing
 
-$objForm = New-Object System.Windows.Forms.Form 
-$objForm.Text = "Data Entry Form"
-$objForm.Size = New-Object System.Drawing.Size(300,200) 
-$objForm.StartPosition = "CenterScreen"
-
-$objForm.KeyPreview = $True
-$objForm.Add_KeyDown({if ($_.KeyCode -eq "Enter") 
-    {$x=$objTextBox.Text;$objForm.Close()}})
-$objForm.Add_KeyDown({if ($_.KeyCode -eq "Escape") 
-    {$objForm.Close()}})
+$form = New-Object System.Windows.Forms.Form 
+$form.Text = "Data Entry Form"
+$form.Size = New-Object System.Drawing.Size(300,200) 
+$form.StartPosition = "CenterScreen"
 
 $OKButton = New-Object System.Windows.Forms.Button
 $OKButton.Location = New-Object System.Drawing.Size(75,120)
 $OKButton.Size = New-Object System.Drawing.Size(75,23)
 $OKButton.Text = "OK"
-$OKButton.Add_Click({$x=$objTextBox.Text;$objForm.Close()})
-$objForm.Controls.Add($OKButton)
+$OKButton.DialogResult = [System.Windows.Forms.DialogResult]::OK
+$form.AcceptButton = $OKButton
+$form.Controls.Add($OKButton)
 
 $CancelButton = New-Object System.Windows.Forms.Button
 $CancelButton.Location = New-Object System.Drawing.Size(150,120)
 $CancelButton.Size = New-Object System.Drawing.Size(75,23)
 $CancelButton.Text = "Cancel"
-$CancelButton.Add_Click({$objForm.Close()})
-$objForm.Controls.Add($CancelButton)
+$CancelButton.DialogResult = [System.Windows.Forms.DialogResult]::Cancel
+$form.CancelButton = $CancelButton
+$form.Controls.Add($CancelButton)
 
-$objLabel = New-Object System.Windows.Forms.Label
-$objLabel.Location = New-Object System.Drawing.Size(10,20) 
-$objLabel.Size = New-Object System.Drawing.Size(280,20) 
-$objLabel.Text = "Please enter the information in the space below:"
-$objForm.Controls.Add($objLabel) 
+$label = New-Object System.Windows.Forms.Label
+$label.Location = New-Object System.Drawing.Size(10,20) 
+$label.Size = New-Object System.Drawing.Size(280,20) 
+$label.Text = "Please enter the information in the space below:"
+$form.Controls.Add($label) 
 
-$objTextBox = New-Object System.Windows.Forms.TextBox 
-$objTextBox.Location = New-Object System.Drawing.Size(10,40) 
-$objTextBox.Size = New-Object System.Drawing.Size(260,20) 
-$objForm.Controls.Add($objTextBox) 
+$textBox = New-Object System.Windows.Forms.TextBox 
+$textBox.Location = New-Object System.Drawing.Size(10,40) 
+$textBox.Size = New-Object System.Drawing.Size(260,20) 
+$form.Controls.Add($textBox) 
 
-$objForm.Topmost = $True
+$form.Topmost = $True
 
-$objForm.Add_Shown({$objForm.Activate()})
-[void] $objForm.ShowDialog()
+$form.Add_Shown({$textBox.Select()})
+$result = $form.ShowDialog()
 
-$x
+if ($result -eq [System.Windows.Forms.DialogResult]::OK)
+{
+    $x = $textBox.Text
+    $x
+}
