@@ -15,7 +15,7 @@ $calendar.MaxSelectionCount = 1
 $form.Controls.Add($calendar) 
 
 $OKButton = New-Object System.Windows.Forms.Button
-$OKButton.Location = New-Object System.Drawing.Size(38,165)
+$OKButton.Location = New-Object System.Drawing.Point(38,165)
 $OKButton.Size = New-Object System.Drawing.Size(75,23)
 $OKButton.Text = "OK"
 $OKButton.DialogResult = [System.Windows.Forms.DialogResult]::OK
@@ -23,7 +23,7 @@ $form.AcceptButton = $OKButton
 $form.Controls.Add($OKButton)
 
 $CancelButton = New-Object System.Windows.Forms.Button
-$CancelButton.Location = New-Object System.Drawing.Size(113,165)
+$CancelButton.Location = New-Object System.Drawing.Point(113,165)
 $CancelButton.Size = New-Object System.Drawing.Size(75,23)
 $CancelButton.Text = "Cancel"
 $CancelButton.DialogResult = [System.Windows.Forms.DialogResult]::Cancel
